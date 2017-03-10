@@ -1,15 +1,38 @@
 body {
   color: #8B0000;
-  font-family: 'Bree Serif',Sansita, sans-serif, monospace; }
-
-div {
+  font-family: 'Bree Serif',Sansita, sans-serif, monospace;
   text-align: center; }
 
-table {
-  position: absolute;
-  padding-left: 50%;
-  margin-left: -95px; }
-  table td .empty {
-    border: solid 1px;
-    height: 50px;
-    width: 50px; }
+.button {
+  background: #8B0000;
+  color: #FFFFFF;
+  margin-left: auto;
+  margin-right: auto;
+  width: 10vh;
+  height: 5vh; }
+
+#main {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  width: 100%; }
+
+#board {
+  padding: 0;
+  margin: auto;
+  width: 33vh;
+  height: 33vh; }
+
+.title {
+  padding: 0;
+  margin: 0.5vh;
+  height: 10vh;
+  width: 10vh;
+  border-radius: 0.5vh;
+  background: #8B0000;
+  cursor: pointer;
+  float: left;
+  color: #FFFFFF;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 45px; }

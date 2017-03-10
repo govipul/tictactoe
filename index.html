@@ -11,71 +11,29 @@
       <h1>
         <p>Tic-Tac-Toe</p>
       </h1>
+        <p>X: Player | O: AI Player</p>
     </div>
     <hr>
-    <!--<div>
-        <select id="matrixSize" ng-model="matrixSize">
-          <option value="{{3}}" selected="selected">3x3</option>
-          <option value="{{4}}">4x4</option>
-          <option value="{{5}}">5x5</option>
-        </select>
-    </div>
-    <hr>-->
     <div>
-        <table>
-          <tr>
-            <td ng-click="fillBox(0,0)">
-              <div class="empty">
-                  <p>{{cellValue_0_0}}</p>
-              </div>
-            </td>
-            <td ng-click="fillBox(0,1)">
-              <div class="empty">
-                <p>{{cellValue_0_1}}</p>
-              </div>
-            </td>
-            <td ng-click="fillBox(0,2)">
-              <div class="empty">
-                <p>{{cellValue_0_2}}</p>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td ng-click="fillBox(1,0)">
-              <div class="empty">
-                <p>{{cellValue_1_0}}</p>
-              </div>
-            </td>
-            <td ng-click="fillBox(1,1)">
-              <div class="empty">
-                <p>{{cellValue_1_1}}</p>
-              </div>
-            </td>
-            <td ng-click="fillBox(1,2)">
-              <div class="empty">
-                <p>{{cellValue_1_2}}</p>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td ng-click="fillBox(2,0)">
-              <div class="empty">
-                <p>{{cellValue_2_0}}</p>
-              </div>
-            </td>
-            <td ng-click="fillBox(2,1)">
-              <div class="empty">
-                <p>{{cellValue_2_1}}</p>
-              </div>
-            </td>
-            <td ng-click="fillBox(2,2)">
-              <div class="empty">
-                <p>{{cellValue_2_2}}</p>
-              </div>
-            </td>
-          </tr>
+        <h1>{{player}}</h1>
+        <div class="button" ng-click="isClicked === true || reset()">Reset</div>
+    </div>
 
-        </table>
+    <hr/>
+    <div id="main">
+
+        <div id="board">
+            <div class="title" ng-click="isClicked === false||claim(0)">{{value_0}}</div>
+            <div class="title" ng-click="isClicked === false||claim(1)">{{value_1}}</div>
+            <div class="title" ng-click="isClicked === false||claim(2)">{{value_2}}</div>
+            <div class="title" ng-click="isClicked === false||claim(3)">{{value_3}}</div>
+            <div class="title" ng-click="isClicked === false||claim(4)">{{value_4}}</div>
+            <div class="title" ng-click="isClicked === false||claim(5)">{{value_5}}</div>
+            <div class="title" ng-click="isClicked === false||claim(6)">{{value_6}}</div>
+            <div class="title" ng-click="isClicked === false||claim(7)">{{value_7}}</div>
+            <div class="title" ng-click="isClicked === false||claim(8)">{{value_8}}</div>
+        </div>
+
     </div>
   </body>
   <script src="js/app.js"></script>

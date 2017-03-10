@@ -1,111 +1,148 @@
 var app = angular.module('tictacToeApp',[]);
 
 app.controller("fullController", ['$scope', function($scope){
+  $scope.player = "You always have choice..."
+  $scope.isClicked = true;
+  var gameBoard = ['','','',
+              '','','',
+              '','',''];
 
-  var turn = 0;
+  var minPlayer = "O";
+  var maxPlayer = "X";
 
-  var computeWinner = function(row, col){
-    return (checkForDiagoWin(row, col));
-  }
-
-  var checkForRowWin = function(row, col){
-    var val = $scope.matrix[row][col];
-    for(var i=0; i < $scope.matrix.length; i++){
-      if(val !== $scope.matrix[row][i]){
-        return false;
-      }
-    }
-    return true;
-  }
-
-  var checkForColWin = function(row, col){
-    var val = $scope.matrix[row][col];
-    for(var i=0; i < $scope.matrix.length; i++){
-      if(val !== $scope.matrix[i][col]){
-        return false;
-      }
-    }
-    return true;
-  }
-
-/*
- * Need to improve the logic, need to make ot dynamic
- */
-  var checkForDiagoWin = function(row, col){
-    return (
-      ($scope.matrix[0][0]!==-1 &&
-        $scope.matrix[1][1]!==-1 &&
-        $scope.matrix[2][2]!==-1) &&
-        ($scope.matrix[0][0] === $scope.matrix[1][1]
-      && $scope.matrix[1][1] === $scope.matrix[2][2]
-      && $scope.matrix[0][0] === $scope.matrix[2][2])
-      ||
-      ($scope.matrix[1][1]!==-1 &&
-        $scope.matrix[0][2]!==-1 &&
-        $scope.matrix[2][0]!==-1) && ($scope.matrix[0][2] === $scope.matrix[1][1]
-        && $scope.matrix[1][1] === $scope.matrix[2][0]
-        && $scope.matrix[0][2] === $scope.matrix[2][0])
-      );
-  }
-  var isCellAvailable = function(row, col){
-    return $scope.matrix[row][col] == -1
-  }
-
-  var isFullyFilled = function(){
-    //alert( $scope.matrix.length);
-    for(var i=0; i < $scope.matrix.length; i++){
-      for(var j=0; j < $scope.matrix[i].length; j++){
-        console.log("-----------> " + i + " ------- " + j);
-          if($scope.matrix[i][j] === -1){
-            return false;
-          }
-      }
+  var winner = function(board, player){
+    if(
+      (board[0]===player && board[1]===player && board[2] === player)||//1st row
+      (board[3]===player && board[4]===player && board[5] === player)||//2nd row
+      (board[6]===player && board[7]===player && board[8] === player)||//3rd row
+      (board[0]===player && board[3]===player && board[6] === player)||//1st column
+      (board[1]===player && board[4]===player && board[7] === player)||//2nd column
+      (board[2]===player && board[5]===player && board[8] === player)||//3rd column
+      (board[2]===player && board[4]===player && board[6] === player)||//right diagonal
+      (board[0]===player && board[4]===player && board[8] === player)//left diagonal
+    ){
       return true;
-    }
-  }
-
-  var isMyTurn = function(){
-    var cellValue = ""
-    if(turn%2 != 0){
-      cellValue = "X";
     } else {
-      cellValue = "O";
-    }
-    turn++;
-    return cellValue;
-  }
-
-  var clearValue = function(){
-    $scope.matrix = [[-1,-1,-1],
-                     [-1,-1,-1],
-                     [-1,-1,-1]];
-    turn = 0;
-
-    for(var i=0; i < $scope.matrix.length; i++){
-      for(var j=0; j < $scope.matrix[i].length; j++){
-        var name = "cellValue_"+i+"_"+j;
-        $scope[name] = "";
-      }
-    }
-  }
-  clearValue();
-  $scope.fillBox = function(row, col){
-    if(isCellAvailable(row, col)){
-      var cellValue = isMyTurn();
-      var name = "cellValue_"+row+"_"+col;
-      $scope.matrix[row][col] = cellValue;
-      $scope[name] = cellValue;
-      var isWin = computeWinner(row, col);
-      if(isWin){
-        alert("Game Over, " + cellValue + " is a WINNER!");
-        clearValue();
-        return;
-      } else if(isFullyFilled()) {
-        alert("Match is draw, try again");
-        clearValue();
-      }
-    } else {
-      alert("Please select different zone");
+      return null;
     }
   };
+
+  var tie = function(board){
+    var moves = board.join('');
+    if(moves.length === 9){
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  var validMove =  function(move, player, board){
+    var newBoard = board.slice(0);
+    if(newBoard[move] === ''){
+      newBoard[move] = player;
+      return newBoard;
+    } else {
+      return null;
+    }
+  };
+
+  var findAiMove = function(board){
+    var bestMoveScore = 100;
+    let move = null;
+    if(winner(board, 'X') || winner(board, 'O' || tie(board))) {
+      return true;
+    }
+    for(var i = 0; i < board.length; i++){
+      let newBoard = validMove(i, minPlayer, board);
+      //If validMove returned a valid game board
+      if(newBoard) {
+        var moveScore = maxScore(newBoard);
+        if (moveScore < bestMoveScore) {
+          bestMoveScore = moveScore;
+          move = i;
+        }
+      }
+    }
+    return move;
+  };
+
+  function minScore(board) {
+    if (winner(board, 'X')) {
+      return 10;
+    } else if (winner(board, 'O')) {
+      return -10;
+    } else if (tie(board)) {
+      return 0;
+    } else {
+      var bestMoveValue = 100;
+      let move = 0;
+      for (var i = 0; i < board.length; i++) {
+        var newBoard = validMove(i, minPlayer, board);
+        if (newBoard) {
+          var predictedMoveValue = maxScore(newBoard);
+          if (predictedMoveValue < bestMoveValue) {
+            bestMoveValue = predictedMoveValue;
+            move = i;
+          }
+        }
+      }
+      return bestMoveValue;
+    }
+  }
+
+  function maxScore(board) {
+     if(winner(board, 'X')) {
+      return 10;
+    } else if(winner(board, 'O')) {
+      return -10;
+    } else if(tie(board)) {
+      return 0;
+    } else {
+      var bestMoveValue = -100;
+      let move = 0;
+      for (var i = 0; i < board.length; i++) {
+        var newBoard = validMove(i, maxPlayer, board);
+        if (newBoard) {
+          var predictedMoveValue = minScore(newBoard);
+          if (predictedMoveValue > bestMoveValue) {
+            bestMoveValue = predictedMoveValue;
+            move = i;
+          }
+        }
+      }
+      return bestMoveValue;
+    }
+  }
+  var computeWinnerOrTie = function(board, player){
+      if(winner(board, player)){
+        $scope.player = player + " is a WINNER!";
+        $scope.isClicked = false;
+      } else if(tie(board)){
+        $scope.player = "It's a TIE!";
+        $scope.isClicked = false;
+      }
+  };
+
+  $scope.claim = function(cell){
+    if(validMove(cell, 'X', gameBoard)){
+      var name = "value_";
+      $scope[name+cell] = "X";
+      gameBoard[cell] = "X";
+      computeWinnerOrTie(gameBoard, 'X');
+      var aiMove = findAiMove(gameBoard);
+      $scope[name+aiMove] = "O";
+      gameBoard[aiMove] = "O";
+      computeWinnerOrTie(gameBoard, 'O');
+    }
+  };
+
+  $scope.reset = function() {
+    var name = "value_";
+    for(var i=0; i< gameBoard.length; i++){
+      gameBoard[i] = '';
+      $scope[name+i] = '';
+    }
+    $scope.isClicked = true;
+  };
+
 }]);
