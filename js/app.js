@@ -143,6 +143,7 @@ app.controller("fullController", ['$scope', function($scope){
       $scope[name+i] = '';
     }
     $scope.isClicked = true;
+    $scope.player = "Try Again";
   };
 
 }]);
